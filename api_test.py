@@ -20,7 +20,12 @@ def api_test(url, req_per_second):
 
     while True:
         t0 = time.time()
-        r = requests.get(url=url)
+        try:
+            r = requests.get(url=url, timeout=10)
+        except requests.exceptions.Timeout:
+            print("FAILURE: The request timed out")
+            time.sleep(wait_time)
+            continue
         t1 = time.time()
         ttlb = round(((t1 - t0) * 1000), 1)
         if r:
